@@ -1,5 +1,23 @@
 <template>
     <div class="posts">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+            
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <router-link :to="{name:'posts'}" class="nav-link active" aria-current="page" href="#">Home</router-link>
+                </li>
+                
+                </ul>
+                <form class="d-flex">
+                <div>
+                            <router-link  :class="['btn btn-outline-warning right']" to="/logout"><i class="bi bi-box-arrow-right">Logout</i></router-link>
+                </div>
+                </form>
+            </div>
+            </div>
+         </nav>
         <div class="container mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-12">
@@ -9,31 +27,34 @@
                         </div>
                         <div class="card-body">
                             <form @submit.prevent="PostUpdate">
-
+                                
                                 <div class="form-group">
                                     <label>TITLE</label>
-                                    <input type="text" class="form-control" v-model="post.title"
-                                           placeholder="Masukkan Title">
-                                    <div v-if="validation.title">
-                                        <div class="alert alert-danger mt-1" role="alert">
-                                            {{ validation.title[0] }}
-                                        </div>
+                                    <input type="text" class="form-control" v-model="post.title" v-model.trim="$v.title.$model" :class="{'is-invalid':$v.title.$error}" placeholder="Masukkan Title">  
+                                    <div class="invalid-feedback">
+                                        <span v-if="!$v.title.required">Title is required</span>
+                                       <span v-if="!$v.title.minLength">Title must have at least {{$v.title.$params.minLength.min}} letters</span>
+                                       <span v-if="!$v.title.maxLength">Title must have at most {{$v.title.$params.maxLength.max}} letters</span>   
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label>KONTEN</label>
                                     <textarea class="form-control" v-model="post.content" rows="5"
-                                              placeholder="Masukkan Konten"></textarea>
-                                    <div v-if="validation.content">
-                                        <div class="alert alert-danger mt-1" role="alert">
-                                            {{ validation.content[0] }}
-                                        </div>
+                                              placeholder="Masukkan Konten" v-model.trim="$v.content.$model" :class="{'is-invalid':$v.content.$error}"></textarea>
+                                               <div class="invalid-feedback">
+                                                    <span v-if="!$v.content.required">Content is required</span>
+                                                <span v-if="!$v.content.minLength">Content must have at least {{$v.content.$params.minLength.min}} letters</span>
+                                                <span v-if="!$v.content.maxLength">Content must have at most {{$v.content.$params.maxLength.max}} letters</span>
+                                        
+                                        
                                     </div>
+                                    
                                 </div>
-
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-md btn-success mr-2">UPDATE</button>
                                     <button type="reset" class="btn btn-md btn-danger">RESET</button>
+                                    <router-link class="btn btn-warning" :to="{name:'posts'}" >Kembali</router-link>
                                 </div>
 
                             </form>
@@ -47,32 +68,78 @@
 
 <script>
     import axios from 'axios'
+    import{required, minLength, maxLength} from 'vuelidate/lib/validators'
 
     export default {
+        mounted() {
+             let token = localStorage.getItem('token');
+                if(!token){
+                  this.$router.push('/login')
+                }
+                this.getPostById()
+        },
         data() {
             return {
                 post: {
                     title:'',
                     content:''
                 },
-                validation: []
+                title:'',
+                content:'',
+                errors:{}
+               
             }
         },
-        created() {
-            axios.get(`http://localhost:8000/post/${this.$route.params.id}`)
-                .then(({data})=>(this.post=data))
-                .catch(console.log('error'))
-        },
+        validations:{
+			
+			title:{
+				required,
+				minLength:minLength(8),
+                maxLength:maxLength(50)
+
+			},
+			content:{
+				required,
+				minLength:minLength(10),
+                maxLength:maxLength(1000)
+			}
+			
+		},
+        
+        
         methods: {
+            getPostById(){
+                let id= this.$route.params.id
+                axios.get(`http://localhost:8000/post/`+id)
+                // .then(({data})=>(this.post=data))
+                .then(response => {
+                    this.title=response.data.data.title,
+                    this.content=response.data.data.content,
+                    this.post.title=response.data.data.title,
+                    this.post.content=response.data.data.content
+                //untuk debug melalui console log.
+                //  console.log(response.data.data.title)
+                //  console.log(response.data.data.content)
+            })
+                .catch(console.log('error'))
+            },
+
             PostUpdate() {
                 axios.put(`http://localhost:8000/post/${this.$route.params.id}`, this.post)
-                    .then((response) => {
+                    .then(response => {
+                        console.log(response)
+                        // this.title=response.data.data.title,
+                        // this.content=response.data.data.content,
                         this.$router.push({
                             name: 'posts'
                         });
-                        console.log(response);
+                        window.alert("Data Berhasil diedit");
                     }).catch(error => {
-                    this.validation = error.response.data.data;
+                        console.log(error.response.status)
+                        console.log(error.response.data)
+                    this.errors = error.response.data.message;
+                    alert('Data tidak dapat disimpan');
+                    this.$router.push('/');
                 });
             }
         }
