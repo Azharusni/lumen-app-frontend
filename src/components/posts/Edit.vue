@@ -110,24 +110,26 @@
         methods: {
             getPostById(){
                 let id= this.$route.params.id
-                axios.get(`http://localhost:8000/post/`+id)
+                let token = localStorage.getItem('token');
+                axios.get('http://localhost:8000/post/'+id+'?api_token='+token)
                 // .then(({data})=>(this.post=data))
                 .then(response => {
-                    this.title=response.data.data.title,
-                    this.content=response.data.data.content,
-                    this.post.title=response.data.data.title,
-                    this.post.content=response.data.data.content
+                    this.title=response.data.post.title,
+                    this.content=response.data.post.content,
+                    this.post.title=response.data.post.title,
+                    this.post.content=response.data.post.content
                 //untuk debug melalui console log.
-                //  console.log(response.data.data.title)
-                //  console.log(response.data.data.content)
+                //  console.log(response.data.post.title)
+                 
             })
                 .catch(console.log('error'))
             },
 
             PostUpdate() {
-                axios.put(`http://localhost:8000/post/${this.$route.params.id}`, this.post)
+                 let token =localStorage.getItem('token')
+                axios.put(`http://localhost:8000/post/${this.$route.params.id}?api_token=`+token, this.post)
                     .then(response => {
-                        console.log(response)
+                        this.post=response.data.data;
                         // this.title=response.data.data.title,
                         // this.content=response.data.data.content,
                         this.$router.push({

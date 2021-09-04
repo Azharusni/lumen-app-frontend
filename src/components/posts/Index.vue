@@ -107,8 +107,12 @@
         
         methods: {
             AllPost(){
-            axios.get('http://localhost:8000/post?page='+ this.pagination.current_page)
+                let token = localStorage.getItem('token');
+                let pagee = this.pagination.current_page;
+            axios.get('http://localhost:8000/post?api_token='+token+'&&page='+ pagee)
             .then(response => {
+                console.log(response.data.data)
+                console.log(response.data)
                 this.posts = response.data.data.data;
                 this.pagination = response.data.pagination;   
             })
@@ -116,9 +120,10 @@
 
             PostDelete(id)
             {
+                let token= localStorage.getItem('token')
                 let del = confirm('Apakah anda yakin?')
                 if(del==true){
-                axios.delete(`http://localhost:8000/post/${id}`)
+                axios.delete(`http://localhost:8000/post/${id}?api_token=`+token)
                     .then(response => {
                         this.posts.splice(this.posts.indexOf(id), 1);
                         console.log(response);

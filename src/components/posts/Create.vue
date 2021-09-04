@@ -118,12 +118,13 @@
 
             
             PostStore() {
-                axios.post('http://localhost:8000/post', this.post)
+                let token =localStorage.getItem('token')
+                axios.post('http://localhost:8000/post?api_token='+token, this.post)
                     .then((response) => {
                         this.$router.push({
                             name: 'posts'
                         });
-                        console.log(response.data.data);
+                        this.post=response.data.data;
                         window.alert("Data Berhasil ditambahkan");
                     })
 
