@@ -111,8 +111,7 @@
                 let pagee = this.pagination.current_page;
             axios.get('http://localhost:8000/post?api_token='+token+'&&page='+ pagee)
             .then(response => {
-                console.log(response.data.data)
-                console.log(response.data)
+                
                 this.posts = response.data.data.data;
                 this.pagination = response.data.pagination;   
             })
@@ -126,14 +125,16 @@
                 axios.delete(`http://localhost:8000/post/${id}?api_token=`+token)
                     .then(response => {
                         this.posts.splice(this.posts.indexOf(id), 1);
-                        console.log(response);
+                        this.post = response.data
                         window.alert("Data Berhasil dihapus");
-                    }).catch(error => {
-                    console.log(error.response);
+                    })
+                    .catch((error) => {
+					if(error.response.status==422){
+                        alert("Data gagal dihapus!")
+					} 
                 });
-                }else{
-                    this.$router.push('/')
                 }
+                   
                 
             },
             
