@@ -15,7 +15,7 @@
 		<div class="form-group">
 			<div class="mb-3">
 				<label for="exampleInputEmail1" class="form-label">Username</label>
-				<input type="text" class="form-control" id="exampleInputEmail1"  placeholder="username" aria-describedby="emailHelp" v-model="register.username" v-model.trim="$v.username.$model" :class="{'is-invalid':$v.username.$error,'is-valid':!$v.username.$invalid}" >
+				<input type="text" class="form-control"   placeholder="username" aria-describedby="emailHelp" v-model="register.username" v-model.trim="$v.username.$model" :class="{'is-invalid':$v.username.$error,'is-valid':!$v.username.$invalid}" >
 				<div class="valid-feedback">Your Username is valid</div>
 				<div class="invalid-feedback">
 					<span v-if="!$v.username.required">Username is required</span>
@@ -28,7 +28,7 @@
 		<div class="form-group">
 			<div class="mb-3">
 				<label for="exampleInputEmail1" class="form-label">Email</label>
-				<input type="text" class="form-control" id="exampleInputEmail1"  placeholder="Email" aria-describedby="emailHelp" v-model="register.email" v-model.trim="$v.email.$model" :class="{'is-invalid':$v.email.$error,'is-valid':!$v.email.$invalid}" >
+				<input type="text" class="form-control"   placeholder="Email" aria-describedby="emailHelp" v-model="register.email" v-model.trim="$v.email.$model" :class="{'is-invalid':$v.email.$error,'is-valid':!$v.email.$invalid}" >
 				<div class="valid-feedback">Your Email is valid</div>
 				<div class="invalid-feedback">
 					<span v-if="!$v.email.email">Email is required</span>
