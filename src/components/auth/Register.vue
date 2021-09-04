@@ -141,7 +141,7 @@ import{required, minLength, email,} from 'vuelidate/lib/validators'
 
 				.catch((error) => {
 					if(error.response.status==422){
-						console.log(error.response.data)
+						// console.log(error.response.data)
 						this.errors.email=error.response.data.email;
 						this.errors.password=error.response.data.password;
 					}

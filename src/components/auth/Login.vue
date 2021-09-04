@@ -131,7 +131,7 @@
 				
 				.catch((error) => {
 					if(error.response.status==422){
-						console.log(error.response.data)
+						// console.log(error.response.data)
 						// this.email = error.response.data.email;
 						// this.password = error.response.data.password;
 						this.errors.email=error.response.data.email;

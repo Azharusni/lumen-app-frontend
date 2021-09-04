@@ -111,7 +111,6 @@
                 let pagee = this.pagination.current_page;
             axios.get('http://localhost:8000/post?api_token='+token+'&&page='+ pagee)
             .then(response => {
-                
                 this.posts = response.data.data.data;
                 this.pagination = response.data.pagination;   
             })
