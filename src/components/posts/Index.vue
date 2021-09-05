@@ -26,10 +26,10 @@
                 <div class="col-md-12">  
                     <div class="card">
                         <div class="card-header">
-                            POSTS
+                            NOTES
                         </div>
                         <div class="card-body">
-                            <router-link :class="['btn btn-md btn-success mb-2']" to="/create">TAMBAH POST</router-link>
+                            <router-link :class="['btn btn-md btn-success mb-2']" to="/create">TAMBAH CATATAN</router-link>
                             <hr>
 
                             <div class="table-responsive mt-2">
